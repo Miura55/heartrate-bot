@@ -17,6 +17,7 @@ from linebot.exceptions import (
 line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.environ.get('CHANNEL_SECRET'))
 
+app = Flask(__name__, static_folder='static')
 
 @app.route('/')
 def do_get():
@@ -76,6 +77,5 @@ def reply_with_request(event, msg):
 
 
 if __name__ == "__main__":
-    app = Flask(__name__, static_folder='static')
-    app.debug = True
-    app.run()
+    port = int(os.getenv("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
