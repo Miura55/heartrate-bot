@@ -13,7 +13,6 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 
-app = Flask(__name__, static_folder='static')
 
 line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.environ.get('CHANNEL_SECRET'))
@@ -77,5 +76,6 @@ def reply_with_request(event, msg):
 
 
 if __name__ == "__main__":
+    app = Flask(__name__, static_folder='static')
     app.debug = True
     app.run()
