@@ -2,7 +2,6 @@ from flask import Flask, request, abort, render_template
 import os
 import json
 import base64
-import redis
 import urllib.parse
 import requests
 import numpy
@@ -19,13 +18,6 @@ app = Flask(__name__, static_folder='static')
 line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
 handler = WebhookHandler(os.environ.get('CHANNEL_SECRET'))
 
-url = urllib.parse.urlparse(os.environ["REDIS_URL"])
-pool = redis.ConnectionPool(host=url.hostname,
-                            port=url.port,
-                            db=url.path[1:],
-                            password=url.password,
-                            decode_responses=True)
-r = redis.StrictRedis(connection_pool=pool)
 
 @app.route('/')
 def do_get():
@@ -71,29 +63,6 @@ def handle_things_event(event):
 
     temperature = float(numpy.frombuffer(
         buffer=decoded, dtype='int16', count=1, offset=0)[0] / 100.0)
-
-
-    if r.hget(event["source"]["userId"], 'accelerometer') is None:
-        r.hmset(event["source"]["userId"], {
-                'accelerometer': accelerometer, 'temperature': temperature})
-    else:
-        last_accelerometer = float(
-            r.hget(event["source"]["userId"], 'accelerometer'))
-        last_temperature = float(
-            r.hget(event["source"]["userId"], 'temperature'))
-
-        msg = ''
-
-        if(abs(last_accelerometer - accelerometer) > 0.15):
-            msg += 'バイクが動きました。'
-        elif(abs(last_temperature - temperature) > 5):
-            msg += 'バイクのエンジンがかけられました'
-
-        if msg != '':
-            reply_with_request(event, msg)
-
-        r.hmset(event["source"]["userId"], {
-                'accelerometer': accelerometer, 'temperature': temperature})
 
 
 # Can be replaced with the function in SDK
