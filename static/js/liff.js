@@ -2,7 +2,7 @@
 const USER_SERVICE_UUID         = 'c1473b48-c17f-4e34-acbe-b66feee850d0'; // LED, Button
 // User service characteristics
 const NOTIFY_CHARACTERISTIC_UUID   = '62FBD229-6EDD-4D1A-B554-5C4E1BB29169';
-const BTN_CHARACTERISTIC_UUID   = '62FBD229-6EDD-4D1A-B554-5C4E1BB29169';
+
 
 // PSDI Service UUID: Fixed value for Developer Trial
 const PSDI_SERVICE_UUID         = 'E625601E-9E55-4597-A598-76018A0D293D'; // Device ID
@@ -174,11 +174,6 @@ function liffConnectToDevice(device) {
             // Remove disconnect callback
             device.removeEventListener('gattserverdisconnected', disconnectCallback);
 
-            // Reset LED state
-            ledState = false;
-            // Reset UI elements
-            uiToggleLedButton(false);
-
             // Try to reconnect
             initializeLiff();
         };
@@ -193,16 +188,6 @@ function liffGetUserService(service) {
     // Button pressed state
     service.getCharacteristic(NOTIFY_CHARACTERISTIC_UUID).then(characteristic => {
         liffGetButtonStateCharacteristic(characteristic);
-    }).catch(error => {
-        uiStatusError(makeErrorMsg(error), false);
-    });
-
-    // Toggle LED
-    service.getCharacteristic(LED_CHARACTERISTIC_UUID).then(characteristic => {
-        window.ledCharacteristic = characteristic;
-
-        // Switch off by default
-        liffToggleDeviceLedState(false);
     }).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
     });
@@ -232,16 +217,6 @@ function liffGetButtonStateCharacteristic(characteristic) {
             el.innerText = val;
         });
     }).catch(error => {
-        uiStatusError(makeErrorMsg(error), false);
-    });
-}
-
-function liffToggleDeviceLedState(state) {
-    // on: 0x01
-    // off: 0x00
-    window.ledCharacteristic.writeValue(
-        state ? new Uint8Array([0x01]) : new Uint8Array([0x00])
-    ).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
     });
 }
