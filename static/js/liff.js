@@ -8,9 +8,6 @@ const NOTIFY_CHARACTERISTIC_UUID   = '62FBD229-6EDD-4D1A-B554-5C4E1BB29169';
 const PSDI_SERVICE_UUID         = 'E625601E-9E55-4597-A598-76018A0D293D'; // Device ID
 const PSDI_CHARACTERISTIC_UUID  = '26E2B12B-85F0-4F3F-9FDD-91D114270E6E';
 
-// UI settings
-let ledState = false; // true: LED on, false: LED off
-let clickCount = 0;
 
 // -------------- //
 // On window load //
@@ -20,24 +17,14 @@ window.onload = () => {
     initializeApp();
 };
 
-// ----------------- //
-// Handler functions //
-// ----------------- //
-
-function handlerToggleLed() {
-    ledState = !ledState;
-
-    uiToggleLedButton(ledState);
-    liffToggleDeviceLedState(ledState);
-}
 
 // ------------ //
 // UI functions //
 // ------------ //
 
 function uiToggleLedButton(state) {
-    const el = document.getElementById("btn-led-toggle");
-    el.innerText = state ? "Switch LED OFF" : "Switch LED ON";
+  const elStatus = document.getElementById("status");
+  const elControls = document.getElementById("controls");
 
     if (state) {
       el.classList.add("led-on");
@@ -117,7 +104,6 @@ function initializeApp() {
 
 function initializeLiff() {
     liff.initPlugins(['bluetooth']).then(() => {
-        alert("Start to connect");
         liffCheckAvailablityAndDo(() => liffRequestDevice());
     }).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
@@ -150,7 +136,6 @@ function liffRequestDevice() {
 function liffConnectToDevice(device) {
     device.gatt.connect().then(() => {
         document.getElementById("device-name").innerText = device.name;
-        // document.getElementById("device-id").innerText = device.id;
 
         // Show status connected
         uiToggleDeviceConnected(true);
