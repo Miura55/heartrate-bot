@@ -117,6 +117,7 @@ function initializeApp() {
 
 function initializeLiff() {
     liff.initPlugins(['bluetooth']).then(() => {
+        alert("Start to connect");
         liffCheckAvailablityAndDo(() => liffRequestDevice());
     }).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
