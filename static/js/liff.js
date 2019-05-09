@@ -1,7 +1,7 @@
 // User service UUID: Change this to your generated service UUID
 const USER_SERVICE_UUID         = 'c1473b48-c17f-4e34-acbe-b66feee850d0'; // LED, Button
 // User service characteristics
-const LED_CHARACTERISTIC_UUID   = 'E9062E71-9E62-4BC6-B0D3-35CDCD9B027B';
+const NOTIFY_CHARACTERISTIC_UUID   = '62FBD229-6EDD-4D1A-B554-5C4E1BB29169';
 const BTN_CHARACTERISTIC_UUID   = '62FBD229-6EDD-4D1A-B554-5C4E1BB29169';
 
 // PSDI Service UUID: Fixed value for Developer Trial
@@ -191,7 +191,7 @@ function liffConnectToDevice(device) {
 
 function liffGetUserService(service) {
     // Button pressed state
-    service.getCharacteristic(BTN_CHARACTERISTIC_UUID).then(characteristic => {
+    service.getCharacteristic(NOTIFY_CHARACTERISTIC_UUID).then(characteristic => {
         liffGetButtonStateCharacteristic(characteristic);
     }).catch(error => {
         uiStatusError(makeErrorMsg(error), false);
