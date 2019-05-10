@@ -63,7 +63,7 @@ def handle_things_event(event):
 
     heart_rate = float(numpy.frombuffer(
         buffer=decoded, dtype='int16', count=1, offset=0)[0])
-    app.logger.info("Heart_rate: ", heart_rate)
+    print("Heart_rate: ", heart_rate)
 
 
 # Can be replaced with the function in SDK
