@@ -7,7 +7,7 @@ import requests
 import numpy
 
 from linebot import (
-    LineBotApi, WebhookHandler
+    LineBotApi, WebhookParser
 )
 from linebot.exceptions import (
     InvalidSignatureError
@@ -15,7 +15,8 @@ from linebot.exceptions import (
 
 
 line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
-handler = WebhookHandler(os.environ.get('CHANNEL_SECRET'))
+parser = WebhookParser(CHANNEL_SECRET)
+
 
 app = Flask(__name__, static_folder='static')
 
