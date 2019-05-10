@@ -12,6 +12,9 @@ from linebot import (
 from linebot.exceptions import (
     InvalidSignatureError
 )
+from linebot.models import (
+    MessageEvent, TextMessage, TextSendMessage,
+)
 
 
 line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
