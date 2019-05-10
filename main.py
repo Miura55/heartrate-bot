@@ -15,7 +15,7 @@ from linebot.exceptions import (
 
 
 line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
-parser = WebhookParser(CHANNEL_SECRET)
+parser = WebhookParser(os.environ.get('CHANNEL_SECRET'))
 
 
 app = Flask(__name__, static_folder='static')
