@@ -34,10 +34,9 @@ def callback():
     try:
         # Python SDK doesn't support LINE Things event
         # => Unknown event type. type=things
-        """
         for event in parser.parse(body, signature):
             handle_message(event)
-        """
+
         # Parse JSON without SDK for LINE Things event
         events = json.loads(body)
         for event in events["events"]:
@@ -49,7 +48,6 @@ def callback():
 
     return 'OK'
 
-
 def handle_things_event(event):
     if event["things"]["type"] != "scenarioResult":
         return
@@ -57,24 +55,13 @@ def handle_things_event(event):
         app.logger.warn("Error result: %s", event)
         return
 
-    # Read value end decode
-    decoded = base64.b64decode(
-        event["things"]["result"]["bleNotificationPayload"])
+    button_state = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
+    if button_state > 0:
+        line_bot_api.reply_message(event["replyToken"], TextSendMessage(text=str(button_state)))
 
-    heart_rate = float(numpy.frombuffer(
-        buffer=decoded, dtype='int16', count=1, offset=0)[0])
-    print("Heart_rate: ", heart_rate)
-
-
-# Can be replaced with the function in SDK
-def reply_with_request(event, msg):
-    url = 'https://api.line.me/v2/bot/message/reply'
-    payload = {"replyToken": event["replyToken"],
-               "messages": [{"type": "text", "text": msg}]}
-    headers = {'content-type': 'application/json',
-               'Authorization': 'Bearer %s' % os.environ.get('CHANNEL_ACCESS_TOKEN')}
-    requests.post(url, data=json.dumps(payload), headers=headers)
-    return
+def handle_message(event):
+    if event.type == "message" and event.message.type == "text":
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
 
 
 if __name__ == "__main__":
