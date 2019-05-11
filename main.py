@@ -16,9 +16,11 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage,
 )
 
+CHANNEL_ACCESS_TOKEN = os.environ.get('CHANNEL_ACCESS_TOKEN')
+CHANNEL_SECRET = os.environ.get('CHANNEL_SECRET')
 
-line_bot_api = LineBotApi(os.environ.get('CHANNEL_ACCESS_TOKEN'))
-parser = WebhookParser(os.environ.get('CHANNEL_SECRET'))
+line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
+parser = WebhookParser(CHANNEL_SECRET)
 
 
 app = Flask(__name__, static_folder='static')
@@ -59,16 +61,22 @@ def handle_things_event(event):
         app.logger.warn("Error result: %s", event)
         return
 
-    button_state = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
-    app.logger.info("Got data:", button_state)
+    # Read value end decode
+    decoded = base64.b64decode(
+        event["things"]["result"]["bleNotificationPayload"])
+    button_state = float(numpy.frombuffer(
+        buffer=decoded, dtype='int16', count=1, offset=0)[0])
+    app.logger.info("Got data: " + str(button_state))
     if button_state > 0:
-        line_bot_api.reply_message(event["replyToken"], TextSendMessage(text=str(button_state)))
+        line_bot_api.reply_message(event["replyToken"],
+            TextSendMessage(text="Heart_rate: " + str(button_state)))
 
 def handle_message(event):
     if event.type == "message" and event.message.type == "text":
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=event.message.text))
+        line_bot_api.reply_message(event.reply_token,
+            TextSendMessage(text=event.message.text))
 
 
 if __name__ == "__main__":
-    port = int(os.getenv("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
+    app.debug = True
+    app.run()
