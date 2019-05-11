@@ -19,7 +19,6 @@ from linebot.models import (
 CHANNEL_ACCESS_TOKEN = os.environ.get('CHANNEL_ACCESS_TOKEN')
 CHANNEL_SECRET = os.environ.get('CHANNEL_SECRET')
 
-
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(CHANNEL_SECRET)
 
@@ -62,11 +61,7 @@ def handle_things_event(event):
         app.logger.warn("Error result: %s", event)
         return
 
-    # Read value end decode
-    decoded = base64.b64decode(
-        event["things"]["result"]["bleNotificationPayload"])
-    button_state = float(numpy.frombuffer(
-        buffer=decoded, dtype='int16', count=1, offset=0)[0])
+    button_state = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
     app.logger.info("Got data: " + str(button_state))
     if button_state > 0:
         line_bot_api.reply_message(event["replyToken"],
