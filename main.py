@@ -19,6 +19,7 @@ from linebot.models import (
 CHANNEL_ACCESS_TOKEN = os.environ.get('CHANNEL_ACCESS_TOKEN')
 CHANNEL_SECRET = os.environ.get('CHANNEL_SECRET')
 
+
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(CHANNEL_SECRET)
 
