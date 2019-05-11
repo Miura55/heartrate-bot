@@ -60,6 +60,7 @@ def handle_things_event(event):
         return
 
     button_state = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
+    app.logger.info("Got data:", button_state)
     if button_state > 0:
         line_bot_api.reply_message(event["replyToken"], TextSendMessage(text=str(button_state)))
 
