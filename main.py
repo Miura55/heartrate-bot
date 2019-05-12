@@ -36,7 +36,7 @@ def callback():
 
     # get request body as text
     body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
+    print("Request body: " + body)
 
     try:
         # Python SDK doesn't support LINE Things event
@@ -63,7 +63,7 @@ def handle_things_event(event):
         return
 
     heart_rate = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
-    app.logger.info("Got data: " + str(heart_rate))
+    print("Got data: " + str(heart_rate))
     if heart_rate > 0:
         resp = use_kintone.PostToKintone(heart_rate)
         print(resp.text)
