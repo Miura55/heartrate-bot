@@ -5,6 +5,7 @@ import base64
 import urllib.parse
 import requests
 import numpy
+import use_kintone
 
 from linebot import (
     LineBotApi, WebhookParser
@@ -61,11 +62,13 @@ def handle_things_event(event):
         app.logger.warn("Error result: %s", event)
         return
 
-    button_state = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
-    app.logger.info("Got data: " + str(button_state))
+    heart_rate = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
+    app.logger.info("Got data: " + str(heart_rate))
     if button_state > 0:
-        line_bot_api.reply_message(event["replyToken"],
-            TextSendMessage(text="Heart_rate: " + str(button_state)))
+        resp = use_kintone.PostToKintone(heart_rate)
+        print(resp.text)
+        # line_bot_api.reply_message(event["replyToken"],
+        #     TextSendMessage(text="Heart_rate: " + str(button_state)))
 
 def handle_message(event):
     if event.type == "message" and event.message.type == "text":
