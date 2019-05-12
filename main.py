@@ -64,7 +64,7 @@ def handle_things_event(event):
 
     heart_rate = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
     app.logger.info("Got data: " + str(heart_rate))
-    if button_state > 0:
+    if heart_rate > 0:
         resp = use_kintone.PostToKintone(heart_rate)
         print(resp.text)
         # line_bot_api.reply_message(event["replyToken"],
