@@ -26,6 +26,6 @@ def query_kintone():
 
     res = ""
     for num in records:
-        res += records["save_date"]["value"] + " " + records["heart_rate"]["value"] + "\n"
+        res += num["save_date"]["value"] + " " + num["heart_rate"]["value"] + "\n"
 
     return res
