@@ -1,4 +1,5 @@
 from flask import Flask, request, abort, render_template
+from flask_sqlalchemy import SQLAlchemy
 import os
 import json
 import base64
@@ -23,8 +24,12 @@ CHANNEL_SECRET = os.environ.get('CHANNEL_SECRET')
 line_bot_api = LineBotApi(CHANNEL_ACCESS_TOKEN)
 parser = WebhookParser(CHANNEL_SECRET)
 
-
 app = Flask(__name__, static_folder='static')
+
+# DBを定義
+db_uri = os.environ.get('DATABASE_URL')
+app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
+db = SQLAlchemy(app)
 
 @app.route('/')
 def do_get():

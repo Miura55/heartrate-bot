@@ -1,4 +1,6 @@
 import requests
+import datetime as dt
+from datetime import datetime
 import os
 
 URL        = os.environ["KINTONE_APP_URL"]											# URL
@@ -13,6 +15,9 @@ def PostToKintone(heart_rate):
 	return resp
 
 def query_kintone():
+    now = datetime.now()
+    min_10s = now - dt.timedelta(seconds=10)
+    min_10s = min_10s.strftime('%Y-%m-%dT%H:%M:%mZ')
     headers = {
         'X-Cybozu-API-Token': API_TOKEN,
     }
