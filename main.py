@@ -72,7 +72,7 @@ def handle_things_event(event):
 
 def handle_message(event):
     if event.type == "message" and event.message.type == "text":
-        if event.message.text == "今日の心拍":
+        if event.message.text == "今日の心拍数":
             message = use_kintone.query_kintone()
         else:
             message = event.message.text

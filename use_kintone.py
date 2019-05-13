@@ -18,14 +18,14 @@ def query_kintone():
     }
     params = (
         ('app', appId),
-        ('query', 'save_date = TODAY()'),
+        ('query', 'save_date = TODAY() and limit 10'),
     )
 
     response = requests.get('{}/k/v1/records.json'.format(URL), headers=headers, params=params)
     records = response.json()["records"]
 
     res = ""
-    for num in range(10):
-        res += records[num]["save_date"]["value"] + " " + records[num]["heart_rate"]["value"] + "\n"
+    for num in records:
+        res += records["save_date"]["value"] + " " + records["heart_rate"]["value"] + "\n"
 
     return res
