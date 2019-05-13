@@ -7,7 +7,6 @@ import json
 import base64
 import urllib.parse
 import requests
-import use_kintone
 
 from linebot import (
     LineBotApi, WebhookParser
