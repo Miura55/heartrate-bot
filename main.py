@@ -32,7 +32,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 db = SQLAlchemy(app)
 
 class User(db.Model):
-    __tablename__ = 'users'
+    __tablename__ = 'userdatas'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=False)
     heart_rate = db.Column(db.Integer)
