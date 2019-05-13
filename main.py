@@ -1,6 +1,7 @@
 from flask import Flask, request, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import datetime as dt
 import os
 import json
 import base64
@@ -94,8 +95,12 @@ def handle_things_event(event):
 
 def handle_message(event):
     if event.type == "message" and event.message.type == "text":
-        if event.message.text == "今日の心拍数":
-            message = use_kintone.query_kintone()
+        if event.message.text == "今の心拍数":
+            before_10s = datetime.now() - dt.timedelta(seconds=10)
+            users = User.query(User).filter_by(save_date>=before_10s).all()
+            message = ""
+            for data in users:
+                message += data.save_date.strftime('%Y-%m-%d %H:%M:%S') + " " + str(data.heart_rate) + "\n"
         else:
             message = event.message.text
         line_bot_api.reply_message(event.reply_token,
