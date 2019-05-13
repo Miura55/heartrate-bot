@@ -31,6 +31,18 @@ db_uri = os.environ.get('DATABASE_URL')
 app.config['SQLALCHEMY_DATABASE_URI'] = db_uri
 db = SQLAlchemy(app)
 
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True)
+    heart_rate = db.Column(db.Integer)
+
+    def __init__(self, username, heart_rate):
+        self.username = username
+        self.heart_rate = heart_rate
+
+    def __repr__(self):
+        return '<User %r>' % self.username
+
 @app.route('/')
 def do_get():
     return render_template('index.html')
