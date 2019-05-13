@@ -37,10 +37,10 @@ class User(db.Model):
     heart_rate = db.Column(db.Integer)
     save_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
-    def __init__(self, username, heart_rate):
+    def __init__(self, username, heart_rate, save_date):
         self.username = username
         self.heart_rate = heart_rate
-        self.save_date = datetime.now()
+        self.save_date = save_date
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -83,9 +83,11 @@ def handle_things_event(event):
 
     username = event["source"]["userId"]
     heart_rate = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
+    save_date = datetime.now()
+
     print("Got data: " + str(heart_rate))
     if heart_rate > 0:
-        user = User(username, heart_rate)
+        user = User(username, heart_rate, save_date)
         db.session.add(user)
         db.session.commit()
 
