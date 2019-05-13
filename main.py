@@ -97,7 +97,7 @@ def handle_message(event):
     if event.type == "message" and event.message.type == "text":
         if event.message.text == "今の心拍数":
             before_10s = datetime.now() - dt.timedelta(seconds=10)
-            users = User.query(User).filter(save_date>=before_10s).all()
+            users = db.session.query(User).filter(save_date>=before_10s).all()
             message = ""
             for data in users:
                 message += data.save_date.strftime('%Y-%m-%d %H:%M:%S') + " " + str(data.heart_rate) + "\n"
