@@ -40,6 +40,7 @@ class User(db.Model):
     def __init__(self, username, heart_rate):
         self.username = username
         self.heart_rate = heart_rate
+        self.save_date = datetime.now()
 
     def __repr__(self):
         return '<User %r>' % self.username
