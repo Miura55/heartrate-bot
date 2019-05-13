@@ -72,8 +72,6 @@ def handle_things_event(event):
     if heart_rate > 0:
         resp = use_kintone.PostToKintone(heart_rate)
         print(resp.text)
-        # line_bot_api.reply_message(event["replyToken"],
-        #     TextSendMessage(text="Heart_rate: " + str(button_state)))
 
 def handle_message(event):
     if event.type == "message" and event.message.type == "text":
