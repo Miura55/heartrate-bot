@@ -18,7 +18,7 @@ def query_kintone():
     }
     params = (
         ('app', appId),
-        ('query', 'save_date = TODAY() order by save_date asc limit 10'),
+        ('query', 'save_date = TODAY() limit 10'),
     )
 
     response = requests.get('{}/k/v1/records.json'.format(URL), headers=headers, params=params)
