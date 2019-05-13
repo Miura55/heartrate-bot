@@ -1,11 +1,11 @@
 from flask import Flask, request, abort, render_template
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 import os
 import json
 import base64
 import urllib.parse
 import requests
-import numpy
 import use_kintone
 
 from linebot import (
@@ -35,6 +35,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True)
     heart_rate = db.Column(db.Integer)
+    save_date = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     def __init__(self, username, heart_rate):
         self.username = username
