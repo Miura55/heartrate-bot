@@ -80,11 +80,13 @@ def handle_things_event(event):
         app.logger.warn("Error result: %s", event)
         return
 
+    username = event["source"]["userId"]
     heart_rate = int.from_bytes(base64.b64decode(event["things"]["result"]["bleNotificationPayload"]), 'little')
     print("Got data: " + str(heart_rate))
     if heart_rate > 0:
-        resp = use_kintone.PostToKintone(heart_rate)
-        print(resp.text)
+        user = User(username, heart_rate)
+        db.session.add(user)
+        db.session.commit()
 
 def handle_message(event):
     if event.type == "message" and event.message.type == "text":
