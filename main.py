@@ -97,7 +97,7 @@ def handle_message(event):
         if event.message.text == "今の心拍数":
             before_10s = datetime.now() - dt.timedelta(seconds=10)
             print(type(event.source))
-            userId = event.userId
+            userId = event.source.sender_id
             users = db.session.query(User).filter(User.save_date>=before_10s).filter(User.username==userId).all()
             message = ""
             for data in users:
