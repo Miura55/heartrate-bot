@@ -96,16 +96,15 @@ def handle_message(event):
     if event.type == "message" and event.message.type == "text":
         if event.message.text == "今の心拍数":
             before_10s = datetime.now() - dt.timedelta(seconds=10)
-            print(type(event.source))
             userId = event.source.sender_id
             users = db.session.query(User).filter(User.save_date>=before_10s).filter(User.username==userId).all()
-            message = ""
-            for data in users:
-                message += data.save_date.strftime('%Y-%m-%d %H:%M:%S') + " " + str(data.heart_rate) + "\n"
+            list_heart = [int(data.heart_rate) for data in users]
+            av_heart = sum(list_heart) / len(list_heart)
+            message = "現在の心拍: " + av_heart
+            if not av_heart:
+                message = "デバイスの接続がありません。"
         else:
             message = event.message.text
-        if not message:
-            message = "デバイスの接続がありません。"
         line_bot_api.reply_message(event.reply_token,
             TextSendMessage(text=message))
 
