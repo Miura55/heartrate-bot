@@ -62,6 +62,7 @@ def callback():
         # Python SDK doesn't support LINE Things event
         # => Unknown event type. type=things
         for event in parser.parse(body, signature):
+            print(event)
             handle_message(event)
 
         # Parse JSON without SDK for LINE Things event
