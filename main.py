@@ -62,7 +62,6 @@ def callback():
         # Python SDK doesn't support LINE Things event
         # => Unknown event type. type=things
         for event in parser.parse(body, signature):
-            print(event)
             handle_message(event)
 
         # Parse JSON without SDK for LINE Things event
@@ -97,8 +96,8 @@ def handle_message(event):
     if event.type == "message" and event.message.type == "text":
         if event.message.text == "今の心拍数":
             before_10s = datetime.now() - dt.timedelta(seconds=10)
-            print(event["source"])
-            userId = event["source"]["userId"]
+            print(type(event.source))
+            userId = event.source
             users = db.session.query(User).filter(User.save_date>=before_10s).filter(User.username==userId).all()
             message = ""
             for data in users:
