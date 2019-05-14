@@ -99,9 +99,10 @@ def handle_message(event):
             userId = event.source.sender_id
             users = db.session.query(User).filter(User.save_date>=before_10s).filter(User.username==userId).all()
             list_heart = [int(data.heart_rate) for data in users]
-            av_heart = sum(list_heart) / len(list_heart)
-            message = "現在の心拍: " + av_heart
-            if not av_heart:
+            try:
+                av_heart = sum(list_heart) / len(list_heart)
+                message = "現在の心拍: " + av_heart
+            except ZeroDivisionError:
                 message = "デバイスの接続がありません。"
         else:
             message = event.message.text
