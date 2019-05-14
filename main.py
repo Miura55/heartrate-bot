@@ -101,7 +101,7 @@ def handle_message(event):
             list_heart = [int(data.heart_rate) for data in users]
             try:
                 av_heart = sum(list_heart) / len(list_heart)
-                message = "現在の心拍: " + av_heart
+                message = "現在の心拍: " + str(av_heart)
             except ZeroDivisionError:
                 message = "デバイスの接続がありません。"
         else:
